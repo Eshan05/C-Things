@@ -149,9 +149,9 @@ void displayOther() {
     switch (ch) {
       case 1: AreaCalculator(); break;
       case 2: VolumeCalculator(); break;
-      // case 4: BinaryCalculator(); break;
+      case 4: BinaryCalculator(); break;
       case 5: EquationSolver(); break;
-      // case 6: ConversionCalculator(); break;
+      case 6: ConversionCalculator(); break;
       case 7: SeriesCalculator(); break;
       case 8:
         printf("The first number was: ");
