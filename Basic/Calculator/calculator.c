@@ -1,3 +1,7 @@
+#include "areavolume.h"
+#include "binarycalc.h"
+#include "conversion.h"
+#include "eqseries.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -7,6 +11,7 @@
 #define divide(a, b)   ((double)(a) / (double)(b))
 #define pi             3.14159265358979323846
 #define radians(x)     (((x) * pi) / 180.0)
+#define ABS(x)         ((x) < 0 ? -(x) : (x))
 
 long long binExp(long long a, long long b) {
   long long res = 1;
@@ -123,34 +128,18 @@ double arctan2(double y, double x) {
   else return -1.0 / 0.0;
 }
 
-void AreaCalculator() {
-}
-void VolumeCalculator() {
-}
-void MultiplicationTable() {
-}
-void BinaryCalculator() {
-}
-void EquationSolver() {
-}
-void ConversionCalculator() {
-}
-void SeriesCalculator() {
-}
-
 void displayOther() {
-  printf("=== Other calculators ===\n");
-  printf("\t1. Area Calculator\n");
-  printf("\t2. Volume Calculator\n");
-  printf("\t3. Multiplication Table\n");
-  printf("\t4. Basic Binary Calculator\n");
-  printf("\t5. Equation Solver\n");
-  printf("\t6. Conversion Calculator\n");
-  printf("\t7. Series Calculator\n");
-  printf(
-      "\t8. First number as argument for inverse trigonometric functions \n");
-  printf("\t9. Find root of first number to any whole number\n");
-  printf("\t0. Exit\n");
+  printf("/-=-=-=-/ Other calculators /-=-=-=-/\n");
+  printf("1. Area Calculator\n");
+  printf("2. Volume Calculator\n");
+  printf("3. Multiplication Table\n");
+  printf("4. Basic Binary Calculator\n");
+  printf("5. Equation Solver\n");
+  printf("6. Conversion Calculator\n");
+  printf("7. Series Calculator\n");
+  printf("8. First number as argument for inverse trigonometric functions \n");
+  printf("9. Find root of first number to any whole number\n");
+  printf("0. Exit\n");
 
   int ch, flag = 1;
   double ffirst = 0.0;
@@ -158,12 +147,12 @@ void displayOther() {
     printf("\nEnter your choice for other calculators: ");
     scanf("%d", &ch);
     switch (ch) {
-      case 1: AreaCalculator();
-      case 2: VolumeCalculator();
-      case 4: BinaryCalculator();
-      case 5: EquationSolver();
-      case 6: ConversionCalculator();
-      case 7: SeriesCalculator();
+      case 1: AreaCalculator(); break;
+      case 2: VolumeCalculator(); break;
+      // case 4: BinaryCalculator();
+      // case 5: EquationSolver();
+      // case 6: ConversionCalculator();
+      // case 7: SeriesCalculator();
       case 8:
         printf("The first number was: ");
         scanf("%lf", &ffirst);
