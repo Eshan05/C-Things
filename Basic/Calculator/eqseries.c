@@ -39,7 +39,7 @@ void series() {
 
   printf("\nSelect subtopic");
   printf("\n1] Arithmetic progression.\n2] Geometric progression.\n3] "
-         "Harmonic progression\n 4. Fibonacci");
+         "Harmonic progression\n4] Fibonacci");
   printf("\nEnter your choice:- ");
   scanf("%d", &sub);
   switch (sub) {

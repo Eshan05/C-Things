@@ -149,10 +149,10 @@ void displayOther() {
     switch (ch) {
       case 1: AreaCalculator(); break;
       case 2: VolumeCalculator(); break;
-      // case 4: BinaryCalculator();
-      // case 5: EquationSolver();
-      // case 6: ConversionCalculator();
-      // case 7: SeriesCalculator();
+      // case 4: BinaryCalculator(); break;
+      case 5: EquationSolver(); break;
+      // case 6: ConversionCalculator(); break;
+      case 7: SeriesCalculator(); break;
       case 8:
         printf("The first number was: ");
         scanf("%lf", &ffirst);
@@ -161,7 +161,19 @@ void displayOther() {
         printf("arctan(%lf) = %lf\n", ffirst, arctan(ffirst));
         break;
       case 9:
+        int root;
+        printf("The base number is: ");
+        scanf("%lf", &ffirst);
+        printf("The root is: ");
+        scanf("%d", root);
+        double nthroot = nroot(ffirst, root);
+        printf("The %d of %lf is: %lf", root, ffirst, nthroot);
+        break;
       case 0:
+        printf("Exiting...");
+        flag = 0;
+        break;
+      default: printf("Invalid choice!");
     }
   } while (flag);
 }
