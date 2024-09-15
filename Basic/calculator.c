@@ -18,6 +18,22 @@ long long binExp(long long a, long long b) {
   return res;
 }
 
+double nroot(double x, int n) {
+  if (n <= 0) return 0.0 / 0.0;
+  if (x < 0 && n % 2 == 0) return 0.0 / 0.0;
+  if (x == 0) return 0;
+  double low = (x < 1) ? x : 0;
+  double high = (x < 1) ? 1 : x;
+  double eps = 1e-9;
+  while (high - low > eps) {
+    double mid = (low + high) / 2;
+    double midPower = binExp(mid, n);
+    if (midPower > x) high = mid;
+    else low = mid;
+  }
+  return low;
+}
+
 double factorial(int n) {
   double f = 1;
   for (int i = 1; i <= n; i++)
@@ -65,18 +81,100 @@ double cos(double x) {
   return res;
 }
 
+double arcsin(double x) {
+  if (x < -1 || x > 1) return -1.0 / 0.0;
+  if (x < -0.5 || x > 0.5) {
+    if (x > 0.5) return pi / 2 - arcsin(nroot((1 - x * x), 2));
+    return -pi / 2 + arcsin(nroot((1 - x * x), 2));
+  }
+
+  double res = 0.0, term = x;
+  int n = 1;
+  while (term > 1e-10 || term < -1e-10) {
+    res += term;
+    term *= (x * x) * (2 * n - 1) / (2 * n + 1);
+    n++;
+  }
+  return res;
+}
+
+double arccos(double x) {
+  if (x < -1 || x > 1) return -1.0 / 0.0;
+  return pi / 2 - arcsin(x);
+}
+
+double arctan(double x) {
+  double result = 0.0, term = x;
+  int n = 1;
+  while (term > 1e-10 || term < -1e-10) {
+    result += term;
+    term *= -(x * x) * (2 * n - 1) / (2 * n + 1);
+    n++;
+  }
+  return result;
+}
+
+double arctan2(double y, double x) {
+  if (x > 0) return arctan(y / x);
+  else if (x < 0 && y >= 0) return arctan(y / x) + pi;
+  else if (x < 0 && y < 0) return arctan(y / x) - pi;
+  else if (x == 0 && y > 0) return pi / 2;
+  else if (x == 0 && y < 0) return -pi / 2;
+  else return -1.0 / 0.0;
+}
+
+void AreaCalculator() {
+}
+void VolumeCalculator() {
+}
+void MultiplicationTable() {
+}
+void BinaryCalculator() {
+}
+void EquationSolver() {
+}
+void ConversionCalculator() {
+}
+void SeriesCalculator() {
+}
+
 void displayOther() {
   printf("=== Other calculators ===\n");
-  printf("1. Area Calculator");
-  printf("2. Volume Calculator");
-  printf("3. Multiplication Table");
-  printf("4. Basic Binary Calculator");
-  printf("5. Equation Solver");
-  printf("6. Conversion Calculator");
-  printf("7. Series Calculator");
+  printf("\t1. Area Calculator\n");
+  printf("\t2. Volume Calculator\n");
+  printf("\t3. Multiplication Table\n");
+  printf("\t4. Basic Binary Calculator\n");
+  printf("\t5. Equation Solver\n");
+  printf("\t6. Conversion Calculator\n");
+  printf("\t7. Series Calculator\n");
   printf(
-      "8. Use first number as an argument for inverse trigonometric functions");
-  printf("0. Exit\n");
+      "\t8. First number as argument for inverse trigonometric functions \n");
+  printf("\t9. Find root of first number to any whole number\n");
+  printf("\t0. Exit\n");
+
+  int ch, flag = 1;
+  double ffirst = 0.0;
+  do {
+    printf("\nEnter your choice for other calculators: ");
+    scanf("%d", &ch);
+    switch (ch) {
+      case 1: AreaCalculator();
+      case 2: VolumeCalculator();
+      case 4: BinaryCalculator();
+      case 5: EquationSolver();
+      case 6: ConversionCalculator();
+      case 7: SeriesCalculator();
+      case 8:
+        printf("The first number was: ");
+        scanf("%lf", &ffirst);
+        printf("arcsin(%lf) = %lf\n", ffirst, arcsin(ffirst));
+        printf("arccos(%lf) = %lf\n", ffirst, arccos(ffirst));
+        printf("arctan(%lf) = %lf\n", ffirst, arctan(ffirst));
+        break;
+      case 9:
+      case 0:
+    }
+  } while (flag);
 }
 
 int main() {
@@ -86,9 +184,9 @@ int main() {
   printf("3. Subtract both numbers\n");
   printf("4. Multiply both numbers\n");
   printf("5. Divide first by second\n");
-  printf("6. Find first number raised to a power\n");
-  printf("7. Find log with any base of first number\n");
-  printf("8. Use first number as argument for a trigonometric function\n");
+  printf("6. Find first number raised to second\n");
+  printf("7. Find log with any positive base, of first number\n");
+  printf("8. Use first number as argument for trigonometric functions\n");
   printf("9. Access other calculators\n");
   printf("0. Exit\n");
 
@@ -153,7 +251,7 @@ int main() {
         printf("sec(%d) = %f\n", first, 1 / cos(radian));
         printf("csc(%d) = %f\n", first, 1 / sin(radian));
       } break;
-      // case 9: displayOther(); break;
+      case 9: displayOther(); break;
       case 0: flag = 0; break;
       default: printf("Invalid choice\n");
     }
