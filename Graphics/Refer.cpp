@@ -110,5 +110,5 @@ int main(void) {
 /**
  * Should open two windows because I have got both GLFW and FreeGLUT (I guess).
  * * g++ -IC:/ProgramData/mingw64/mingw64/include -IC:/ProgramData/mingw64/mingw64/include/GLFW -LC:/ProgramData/mingw64/mingw64/lib -o f 6ACG.cpp -lglfw3 -lglew32 -lopengl32 -lgdi32 -lglu32 -lfreeglut
- * ^^ Master command I'll say
+ * ^^ Master command I'll say. Remove -lfreeglut 
  */
