@@ -4,5 +4,7 @@
 **/*.dll
 quickformat.cpp
 
-Basic/Graphics/triangle.cpp
-Basic/Graphics/first.c
+Graphics/first.cpp
+Graphics/first.c
+Graphics/InitialGLFW.cpp
+**/.vscode/
