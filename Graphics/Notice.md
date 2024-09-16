@@ -30,6 +30,10 @@ g++ -IC:\ProgramData\mingw64\mingw64\include first.cpp -o f -LC:\ProgramData\min
 ```shell
 g++ -IC:/ProgramData/mingw64/mingw64/include -IC:/ProgramData/mingw64/mingw64/include/GLFW -LC:/ProgramData/mingw64/mingw64/lib -o f gflw.cpp -lglfw3 -lglew32 -lopengl32 -lgdi32 -lglu32
 ```
+4. For GL + GLFW
+```shell
+g++ -IC:/ProgramData/mingw64/mingw64/include -IC:/ProgramData/mingw64/mingw64/include/GLFW -LC:/ProgramData/mingw64/mingw64/lib -o f quick.cpp -lfreeglut -lopengl32 -lglu32 -lglfw3 -lgdi32
+```
 ## C/C++ Extension
 
 Refer to `.vscode/c_cpp_properties.json`.
