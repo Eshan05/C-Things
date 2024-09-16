@@ -2,6 +2,7 @@
 **/*.out
 **/*.txt
 **/*.dll
+**/*.html
 quickformat.cpp
 
 Graphics/first.cpp
