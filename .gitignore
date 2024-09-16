@@ -2,3 +2,7 @@
 **/*.out
 **/*.txt
 **/*.dll
+quickformat.cpp
+
+Basic/Graphics/triangle.cpp
+Basic/Graphics/first.c
