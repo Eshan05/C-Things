@@ -3,6 +3,8 @@
 **/*.txt
 **/*.dll
 **/*.html
+**/*.ttf
+!**/s*.ttf
 quickformat.cpp
 
 Graphics/first.cpp

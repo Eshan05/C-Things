@@ -13,6 +13,7 @@ If I wish to replicate in other PCs:
     └── freeglut.dll
     └── glew32.dll
     └── glfw3.dll
+    └── raylib.dll
     └── ...
 ```
 
