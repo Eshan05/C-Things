@@ -2,11 +2,15 @@
 **/*.out
 **/*.txt
 **/*.dll
+**/*.html
+**/*.ttf
+!**/s*.ttf
 quickformat.cpp
 
 Graphics/first.cpp
 Graphics/first.c
 Graphics/InitialGLFW.cpp
+Graphics/InitialRay.c
 **/.vscode/
-**/draft.cpp
 **/quick.cpp
+**/draft.cpp

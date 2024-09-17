@@ -118,7 +118,7 @@ RawStringFormats:
 ReflowComments: true
 SortIncludes: true
 SortUsingDeclarations: true
-#
+# IMP
 SpaceAfterCStyleCast: false
 SpaceAfterLogicalNot: false
 SpaceAfterTemplateKeyword: true
@@ -126,11 +126,11 @@ SpaceBeforeAssignmentOperators: true
 SpaceBeforeCpp11BracedList: false
 SpaceBeforeCtorInitializerColon: true
 SpaceBeforeInheritanceColon: true
-SpaceBeforeParens: ControlStatements
+SpaceBeforeParens: Never
 SpaceBeforeRangeBasedForLoopColon: true
 SpaceInEmptyBlock: false
 SpacesBeforeTrailingComments: 1
-SpacesInAngles: false
+SpacesInAngles: Leave
 SpacesInContainerLiterals: true
 SpacesInCStyleCastParentheses: false
 # SpacesInParentheses: false
