@@ -34,6 +34,14 @@ g++ -IC:/ProgramData/mingw64/mingw64/include -IC:/ProgramData/mingw64/mingw64/in
 ```shell
 g++ -IC:/ProgramData/mingw64/mingw64/include -IC:/ProgramData/mingw64/mingw64/include/GLFW -LC:/ProgramData/mingw64/mingw64/lib -o f quick.cpp -lfreeglut -lopengl32 -lglu32 -lglfw3 -lgdi32
 ```
+5. Using `<windows.h>`
+```shell
+g++ first.cpp -lgdi32 -lwinmm
+```
+6. With `raylib.h`
+```shell
+gcc -o r InitialRay.c -I"C:/ProgramData/mingw64/mingw64/include" -L"C:/ProgramData/mingw64/mingw64/lib" -lraylib -lopengl32 -lgdi32 -lwinmm
+```
 ## C/C++ Extension
 
 Refer to `.vscode/c_cpp_properties.json`.

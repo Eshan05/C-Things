@@ -8,6 +8,7 @@ quickformat.cpp
 Graphics/first.cpp
 Graphics/first.c
 Graphics/InitialGLFW.cpp
+Graphics/InitialRay.c
 **/.vscode/
-Graphics/quick.cpp
-Graphics/draft.cpp
+**/quick.cpp
+**/draft.cpp
