@@ -8,3 +8,5 @@ Graphics/first.cpp
 Graphics/first.c
 Graphics/InitialGLFW.cpp
 **/.vscode/
+**/draft.cpp
+**/quick.cpp
