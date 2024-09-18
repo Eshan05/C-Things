@@ -1,16 +1,16 @@
 #include <GL/freeglut.h>
-#include <iostream>
-#include <string>
+#include <stdio.h>
+#include <string.h>
 
-enum MenuOption { OPTION_NONE, OPTION_1, OPTION_2 };
+typedef enum { OPTION_NONE, OPTION_1, OPTION_2 } MenuOption;
 
 MenuOption currentOption = OPTION_NONE;
-bool menuOpen = false;
+int menuOpen = 0; // Using int for boolean representation
 
-void drawString(float x, float y, const std::string &text) {
+void drawString(float x, float y, const char *text) {
   glRasterPos2f(x, y);
-  for (char c : text) {
-    glutBitmapCharacter(GLUT_BITMAP_8_BY_13, c);
+  for (const char *c = text; *c != '\0'; ++c) {
+    glutBitmapCharacter(GLUT_BITMAP_8_BY_13, *c);
   }
 }
 
@@ -48,7 +48,7 @@ void keyboard(unsigned char key, int x, int y) {
 
     case 27: // ESC key
       if (menuOpen) {
-        menuOpen = false;
+        menuOpen = 0;        // Close the menu
         glutPostRedisplay(); // Redraw window
       }
       break;
@@ -56,11 +56,11 @@ void keyboard(unsigned char key, int x, int y) {
     case '\r': // ENTER key
       if (menuOpen) {
         switch (currentOption) {
-          case OPTION_1: std::cout << "Option 1 selected\n"; break;
-          case OPTION_2: std::cout << "Option 2 selected\n"; break;
-          default: std::cout << "No option selected\n"; break;
+          case OPTION_1: printf("Option 1 selected\n"); break;
+          case OPTION_2: printf("Option 2 selected\n"); break;
+          default: printf("No option selected\n"); break;
         }
-        menuOpen = false;    // Close the menu
+        menuOpen = 0;        // Close the menu
         glutPostRedisplay(); // Redraw window
       }
       break;
@@ -104,6 +104,8 @@ int main(int argc, char **argv) {
 }
 
 /**
- * For some reason right click doesn't make any menu appears nor does any other
- * mouse buttons. `m` to open menu ENTER to select option Arrow keys to navigate
+ * `m` to open menu
+ * ENTER to select option
+ * Arrow keys to navigate
+ * ESC to close
  */

@@ -13,4 +13,6 @@ Graphics/InitialGLFW.cpp
 Graphics/InitialRay.c
 **/.vscode/
 **/quick.cpp
+**/quick.c
 **/draft.cpp
+**/draft.c

@@ -1,17 +1,17 @@
 #include <GL/freeglut.h>
-#include <iostream>
-#include <string>
+#include <stdio.h>
+#include <string.h>
 
-enum MenuState { MENU_MAIN, MENU_SUB, MENU_NONE };
+typedef enum { MENU_MAIN, MENU_SUB, MENU_NONE } MenuState;
 
 MenuState currentState = MENU_NONE;
 int currentOption = 0;
-bool menuOpen = false;
+int menuOpen = 0; // Using int for boolean representation
 
-void drawString(float x, float y, const std::string &text) {
+void drawString(float x, float y, const char *text) {
   glRasterPos2f(x, y);
-  for (char c : text) {
-    glutBitmapCharacter(GLUT_BITMAP_8_BY_13, c);
+  for (const char *c = text; *c != '\0'; ++c) {
+    glutBitmapCharacter(GLUT_BITMAP_8_BY_13, *c);
   }
 }
 
@@ -68,7 +68,7 @@ void keyboard(unsigned char key, int x, int y) {
         if (currentState == MENU_SUB) {
           currentState = MENU_MAIN; // Go back to main menu
         } else {
-          menuOpen = false; // Close the menu
+          menuOpen = 0; // Close the menu
         }
         glutPostRedisplay(); // Redraw window
       }
@@ -79,7 +79,7 @@ void keyboard(unsigned char key, int x, int y) {
         switch (currentState) {
           case MENU_MAIN:
             if (currentOption == 0) {
-              std::cout << "Main Option 1 selected\n";
+              printf("Main Option 1 selected\n");
             } else if (currentOption == 1) {
               currentState = MENU_SUB; // Go to sub menu
               currentOption = 0;       // Reset sub menu option
@@ -88,9 +88,9 @@ void keyboard(unsigned char key, int x, int y) {
 
           case MENU_SUB:
             if (currentOption == 0) {
-              std::cout << "Sub Option 1 selected\n";
+              printf("Sub Option 1 selected\n");
             } else if (currentOption == 1) {
-              std::cout << "Sub Option 2 selected\n";
+              printf("Sub Option 2 selected\n");
             }
             currentState = MENU_MAIN; // Return to main menu
             break;
@@ -140,3 +140,10 @@ int main(int argc, char **argv) {
   glutMainLoop();
   return 0;
 }
+
+/**
+ * `m` to open menu
+ * ENTER to select option
+ * Arrow keys to navigate
+ * ESC to close
+ */
