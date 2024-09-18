@@ -1,6 +1,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
+#include <stdio.h>
 
 // Function prototypes
 void processInput(GLFWwindow *window);
@@ -13,7 +13,7 @@ GLuint textureID;
 int main() {
   // Initialize GLFW
   if (!glfwInit()) {
-    std::cerr << "Failed to initialize GLFW" << std::endl;
+    fprintf(stderr, "Failed to initialize GLFW\n");
     return -1;
   }
 
@@ -21,7 +21,7 @@ int main() {
   GLFWwindow *window =
       glfwCreateWindow(800, 600, "OpenGL Texture Test", NULL, NULL);
   if (!window) {
-    std::cerr << "Failed to create GLFW window" << std::endl;
+    fprintf(stderr, "Failed to create GLFW window\n");
     glfwTerminate();
     return -1;
   }
@@ -30,9 +30,9 @@ int main() {
   glfwMakeContextCurrent(window);
 
   // Initialize GLEW
-  glewExperimental = true;
+  glewExperimental = GL_TRUE;
   if (glewInit() != GLEW_OK) {
-    std::cerr << "Failed to initialize GLEW" << std::endl;
+    fprintf(stderr, "Failed to initialize GLEW\n");
     return -1;
   }
 
@@ -71,7 +71,7 @@ int main() {
 
 void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-    glfwSetWindowShouldClose(window, true);
+    glfwSetWindowShouldClose(window, 1);
   }
 }
 
@@ -112,3 +112,7 @@ void renderTexture() {
 
   glDisable(GL_TEXTURE_2D);
 }
+
+// gcc -IC:\ProgramData\mingw64\mingw64\include SimpleTextureTest.c -o f
+// -LC:\ProgramData\mingw64\mingw64\lib -lglfw3 -lglew32 -lopengl32 -lgdi32
+// -lglu32

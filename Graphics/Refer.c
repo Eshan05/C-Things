@@ -1,11 +1,9 @@
-// clang-format off
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
-// clang-format on
 // Global variable to store GLFW window
 GLFWwindow *window;
 

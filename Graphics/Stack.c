@@ -1,19 +1,18 @@
 #include <GL/glut.h>
-#include <iostream>
-#include <string>
-#include <vector>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-using namespace std;
+#define MAX_STACK_SIZE 4
+#define SCREEN_WIDTH   500
+#define SCREEN_HEIGHT  500
 
-struct Element {
-  string value;
-};
+typedef struct {
+  char value[50]; // Adjust size as necessary
+} Element;
 
-constexpr int MAX_STACK_SIZE = 4;
-constexpr int SCREEN_WIDTH = 500;
-constexpr int SCREEN_HEIGHT = 500;
-
-vector<Element> stack;
+Element stack[MAX_STACK_SIZE];
 int top = -1;
 
 bool initOpenGL();
@@ -38,10 +37,10 @@ bool initOpenGL() {
   return (error == GL_NO_ERROR);
 }
 
-void drawBitmapText(const string &text, int x, int y) {
+void drawBitmapText(const char *text, int x, int y) {
   glRasterPos2f(x, y);
-  for (char ch : text) {
-    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ch);
+  for (const char *ch = text; *ch != '\0'; ++ch) {
+    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *ch);
   }
 }
 
@@ -54,15 +53,10 @@ void pushElement() {
   }
 
   top++;
-  string input;
-  cout << "\nEnter the Element: ";
-  cin >> input;
-
-  if (top < stack.size()) {
-    stack[top].value = input;
-  } else {
-    stack.push_back({ input });
-  }
+  char input[50];
+  printf("\nEnter the Element: ");
+  scanf("%s", input);
+  strcpy(stack[top].value, input);
   renderStack();
 }
 
@@ -74,7 +68,7 @@ void popElement() {
     return;
   }
 
-  cout << "\nElement " << stack[top].value << " is removed from stack\n";
+  printf("\nElement %s is removed from stack\n", stack[top].value);
   top--;
   renderStack();
 }
@@ -150,7 +144,7 @@ int main(int argc, char *argv[]) {
   glutCreateWindow("STACK");
 
   if (!initOpenGL()) {
-    cout << "Error initializing OpenGL" << endl;
+    printf("Error initializing OpenGL\n");
     return -1;
   }
 
