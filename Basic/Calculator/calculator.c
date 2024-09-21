@@ -15,8 +15,8 @@
 
 long long binExp(long long a, long long b) {
   long long res = 1;
-  while (b > 0) {
-    if (b & 1) res *= a;
+  while(b > 0) {
+    if(b & 1) res *= a;
     a *= a;
     b >>= 1;
   }
@@ -24,16 +24,16 @@ long long binExp(long long a, long long b) {
 }
 
 double nroot(double x, int n) {
-  if (n <= 0) return 0.0 / 0.0;
-  if (x < 0 && n % 2 == 0) return 0.0 / 0.0;
-  if (x == 0) return 0;
+  if(n <= 0) return 0.0 / 0.0;
+  if(x < 0 && n % 2 == 0) return 0.0 / 0.0;
+  if(x == 0) return 0;
   double low = (x < 1) ? x : 0;
   double high = (x < 1) ? 1 : x;
   double eps = 1e-9;
-  while (high - low > eps) {
+  while(high - low > eps) {
     double mid = (low + high) / 2;
     double midPower = binExp(mid, n);
-    if (midPower > x) high = mid;
+    if(midPower > x) high = mid;
     else low = mid;
   }
   return low;
@@ -41,18 +41,18 @@ double nroot(double x, int n) {
 
 double factorial(int n) {
   double f = 1;
-  for (int i = 1; i <= n; i++)
+  for(int i = 1; i <= n; i++)
     f *= i;
   return f;
 }
 
 double loge(double x) {
-  if (x <= 0) return -1.0 / 0.0;
-  if (x == 1) return 0.0;
+  if(x <= 0) return -1.0 / 0.0;
+  if(x == 1) return 0.0;
   double cnt = 0, it = 20, powe = 1, res = 0;
   double z = (x - 1) / (x + 1);
   double step = (x - 1) / (x + 1);
-  while (cnt <= it) {
+  while(cnt <= it) {
     double y = (1 / powe) * z;
     res += y;
     z *= step;
@@ -64,7 +64,7 @@ double loge(double x) {
 
 double sin(double x) {
   double res = 0.0, sign = 1.0, n = 1, term = x;
-  while (term > 1e-10 || term < -1e-10) {
+  while(term > 1e-10 || term < -1e-10) {
     res += term;
     n += 2;
     sign = -sign;
@@ -76,7 +76,7 @@ double sin(double x) {
 
 double cos(double x) {
   double res = 0.0, sign = 1.0, n = 0, term = 1.0;
-  while (term > 1e-10 || term < -1e-10) {
+  while(term > 1e-10 || term < -1e-10) {
     res += term;
     n += 2;
     sign = -sign;
@@ -87,15 +87,15 @@ double cos(double x) {
 }
 
 double arcsin(double x) {
-  if (x < -1 || x > 1) return -1.0 / 0.0;
-  if (x < -0.5 || x > 0.5) {
-    if (x > 0.5) return pi / 2 - arcsin(nroot((1 - x * x), 2));
+  if(x < -1 || x > 1) return -1.0 / 0.0;
+  if(x < -0.5 || x > 0.5) {
+    if(x > 0.5) return pi / 2 - arcsin(nroot((1 - x * x), 2));
     return -pi / 2 + arcsin(nroot((1 - x * x), 2));
   }
 
   double res = 0.0, term = x;
   int n = 1;
-  while (term > 1e-10 || term < -1e-10) {
+  while(term > 1e-10 || term < -1e-10) {
     res += term;
     term *= (x * x) * (2 * n - 1) / (2 * n + 1);
     n++;
@@ -104,14 +104,14 @@ double arcsin(double x) {
 }
 
 double arccos(double x) {
-  if (x < -1 || x > 1) return -1.0 / 0.0;
+  if(x < -1 || x > 1) return -1.0 / 0.0;
   return pi / 2 - arcsin(x);
 }
 
 double arctan(double x) {
   double result = 0.0, term = x;
   int n = 1;
-  while (term > 1e-10 || term < -1e-10) {
+  while(term > 1e-10 || term < -1e-10) {
     result += term;
     term *= -(x * x) * (2 * n - 1) / (2 * n + 1);
     n++;
@@ -120,11 +120,11 @@ double arctan(double x) {
 }
 
 double arctan2(double y, double x) {
-  if (x > 0) return arctan(y / x);
-  else if (x < 0 && y >= 0) return arctan(y / x) + pi;
-  else if (x < 0 && y < 0) return arctan(y / x) - pi;
-  else if (x == 0 && y > 0) return pi / 2;
-  else if (x == 0 && y < 0) return -pi / 2;
+  if(x > 0) return arctan(y / x);
+  else if(x < 0 && y >= 0) return arctan(y / x) + pi;
+  else if(x < 0 && y < 0) return arctan(y / x) - pi;
+  else if(x == 0 && y > 0) return pi / 2;
+  else if(x == 0 && y < 0) return -pi / 2;
   else return -1.0 / 0.0;
 }
 
@@ -146,7 +146,7 @@ void displayOther() {
   do {
     printf("\nEnter your choice for other calculators: ");
     scanf("%d", &ch);
-    switch (ch) {
+    switch(ch) {
       case 1: AreaCalculator(); break;
       case 2: VolumeCalculator(); break;
       case 4: BinaryCalculator(); break;
@@ -175,7 +175,7 @@ void displayOther() {
         break;
       default: printf("Invalid choice!");
     }
-  } while (flag);
+  } while(flag);
 }
 
 int main() {
@@ -196,7 +196,7 @@ int main() {
   do {
     printf("\nEnter your choice: ");
     scanf("%d", &ch);
-    switch (ch) {
+    switch(ch) {
       case 1:
         printf("Enter first number: ");
         scanf("%f", &first);
@@ -227,7 +227,7 @@ int main() {
                exponentiation);
         break;
       case 7:
-        if (first <= 0) {
+        if(first <= 0) {
           printf("Logarithm undefined for non-positive values.\n");
           break;
         }
@@ -235,7 +235,7 @@ int main() {
         unsigned int base;
         printf("Choose your desired base: ");
         scanf("%u", &base);
-        if (base <= 0) {
+        if(base <= 0) {
           printf("Logarithm base must be positive.\n");
           break;
         }
@@ -256,7 +256,7 @@ int main() {
       case 0: flag = 0; break;
       default: printf("Invalid choice\n");
     }
-  } while (flag);
+  } while(flag);
 
   return 0;
 }
