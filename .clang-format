@@ -18,7 +18,7 @@ AllowShortFunctionsOnASingleLine: All
 # Important
 AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 AllowShortLambdasOnASingleLine: Inline
-AllowShortLoopsOnASingleLine: false
+AllowShortLoopsOnASingleLine: true
 AlwaysBreakAfterDefinitionReturnType: None
 # AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
