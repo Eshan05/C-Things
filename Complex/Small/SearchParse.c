@@ -216,7 +216,6 @@ void print_params(const SearchQuery *query) {
 
     const SearchParams *params = &query->groups[i].params;
     int has_params = 0;
-
     // Check and print each category only if it has parameters
     if (params->language_count > 0) {
       has_params = 1;
@@ -295,7 +294,6 @@ void print_params(const SearchQuery *query) {
     }
 
     printf("- NOT Found: %s\n", params->not_op ? "Yes" : "No");
-
     // Only print a group if it has parameters
     if (!has_params) { printf("- No parameters found for this group.\n"); }
   }
