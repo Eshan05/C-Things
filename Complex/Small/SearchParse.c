@@ -1,26 +1,21 @@
-/**
- * @file   SearchParse.c
- * @brief  Parsing searches similar to GitHub
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#define MAX_TERMS 10
+#define MAX_TERMS  10
+#define MAX_GROUPS 10
 
 typedef struct {
-  char *languages[MAX_TERMS]; // Array to hold languages
-  char *authors[MAX_TERMS];   // Array to hold authors
-  char *repos[MAX_TERMS];     // Array to hold repos
-  char *orgs[MAX_TERMS];      // Array to hold orgs
-  char *paths[MAX_TERMS];     // Array to hold paths
-  char *contents[MAX_TERMS];  // Array to hold contents
-  char *keywords[MAX_TERMS];  // Array to hold keywords
-  int stars;                  // Stars count
-  char *stars_op;             // Operator for stars
-  int not_op;                 // Flag for NOT operation
-  char *logical_op;           // To track logical operators (AND, OR)
+  char *languages[MAX_TERMS];
+  char *authors[MAX_TERMS];
+  char *repos[MAX_TERMS];
+  char *orgs[MAX_TERMS];
+  char *paths[MAX_TERMS];
+  char *contents[MAX_TERMS];
+  char *keywords[MAX_TERMS];
+  int stars;
+  char *stars_op;
+  int not_op;
   int language_count;
   int author_count;
   int repo_count;
@@ -29,6 +24,16 @@ typedef struct {
   int content_count;
   int keyword_count;
 } SearchParams;
+
+typedef struct {
+  SearchParams params;
+  char *logical_op;
+} LogicalGroup;
+
+typedef struct {
+  LogicalGroup groups[MAX_GROUPS];
+  int group_count;
+} SearchQuery;
 
 void cls() {
 #ifdef _WIN32
@@ -47,9 +52,8 @@ void cyan() { printf("\033[1;36m"); }
 void reset() { printf("\033[0m"); }
 
 void header();
-char *strndup(const char *src, size_t n);
-void print_params(const SearchParams *params);
-void parse_search(char *input, SearchParams *params);
+void print_params(const SearchQuery *query);
+void parse_search(char *input, SearchQuery *query);
 
 int main() {
   header();
@@ -78,20 +82,25 @@ int main() {
       printf(" - AND <keyword> <keyword>\n");
       printf(" - OR <keyword> <keyword>\n");
     } else {
-      SearchParams params;
-      parse_search(search, &params);
-      print_params(&params);
+      SearchQuery query;
+      parse_search(search, &query);
+      print_params(&query);
 
       // Free allocated memory
-      for (int i = 0; i < params.language_count; i++) free(params.languages[i]);
-      for (int i = 0; i < params.author_count; i++) free(params.authors[i]);
-      for (int i = 0; i < params.repo_count; i++) free(params.repos[i]);
-      for (int i = 0; i < params.org_count; i++) free(params.orgs[i]);
-      for (int i = 0; i < params.path_count; i++) free(params.paths[i]);
-      for (int i = 0; i < params.content_count; i++) free(params.contents[i]);
-      for (int i = 0; i < params.keyword_count; i++) free(params.keywords[i]);
-      free(params.stars_op);
-      free(params.logical_op);
+      for (int i = 0; i < query.group_count; i++) {
+        SearchParams *params = &query.groups[i].params;
+        for (int j = 0; j < params->language_count; j++)
+          free(params->languages[j]);
+        for (int j = 0; j < params->author_count; j++) free(params->authors[j]);
+        for (int j = 0; j < params->repo_count; j++) free(params->repos[j]);
+        for (int j = 0; j < params->org_count; j++) free(params->orgs[j]);
+        for (int j = 0; j < params->path_count; j++) free(params->paths[j]);
+        for (int j = 0; j < params->content_count; j++)
+          free(params->contents[j]);
+        for (int j = 0; j < params->keyword_count; j++)
+          free(params->keywords[j]);
+        free(query.groups[i].logical_op);
+      }
     }
   }
   return 0;
@@ -114,138 +123,180 @@ void header() {
   printf("\n\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
 }
 
-void parse_search(char *input, SearchParams *params) {
-  memset(params, 0, sizeof(SearchParams));
+void parse_search(char *input, SearchQuery *query) {
+  memset(query, 0, sizeof(SearchQuery));
 
   char *token = strtok(input, " ");
+  SearchParams current_params;
+  memset(&current_params, 0, sizeof(SearchParams)); // Initialize current_params
+
   while (token != NULL) {
-    if (strncmp(token, "language:", 9) == 0) {
-      if (params->language_count < MAX_TERMS) {
-        params->languages[params->language_count++] = strdup(token + 9);
+    if (strcmp(token, "AND") == 0 || strcmp(token, "OR") == 0) {
+      if (current_params.language_count > 0 ||
+          current_params.author_count > 0 || current_params.repo_count > 0 ||
+          current_params.org_count > 0 || current_params.path_count > 0 ||
+          current_params.content_count > 0 ||
+          current_params.keyword_count > 0 || current_params.stars > 0) {
+
+        query->groups[query->group_count].params = current_params;
+        query->groups[query->group_count].logical_op = strdup(token);
+        query->group_count++;
+        memset(&current_params, 0,
+               sizeof(SearchParams)); // Reset current_params
       }
-    } else if (strncmp(token, "author:", 7) == 0) {
-      if (params->author_count < MAX_TERMS) {
-        params->authors[params->author_count++] = strdup(token + 7);
-      }
-    } else if (strncmp(token, "repo:", 5) == 0) {
-      if (params->repo_count < MAX_TERMS) {
-        params->repos[params->repo_count++] = strdup(token + 5);
-      }
-    } else if (strncmp(token, "org:", 4) == 0) {
-      if (params->org_count < MAX_TERMS) {
-        params->orgs[params->org_count++] = strdup(token + 4);
-      }
-    } else if (strncmp(token, "path:", 5) == 0) {
-      if (params->path_count < MAX_TERMS) {
-        params->paths[params->path_count++] = strdup(token + 5);
-      }
-    } else if (strncmp(token, "content:", 8) == 0) {
-      if (params->content_count < MAX_TERMS) {
-        params->contents[params->content_count++] = strdup(token + 8);
-      }
-    } else if (strncmp(token, "NOT", 3) == 0) {
-      params->not_op = 1;
-      token += 4; // Move past "NOT"
-      if (params->keyword_count < MAX_TERMS) {
-        params->keywords[params->keyword_count++] = strdup(token);
-      }
-    } else if (strcmp(token, "AND") == 0) {
-      params->logical_op = strdup("AND");
-    } else if (strcmp(token, "OR") == 0) {
-      params->logical_op = strdup("OR");
     } else {
-      if (params->keyword_count < MAX_TERMS) {
-        params->keywords[params->keyword_count++] =
-            strdup(token); // Store generic keywords
+      // Handle parameter types
+      if (strncmp(token, "language:", 9) == 0) {
+        if (current_params.language_count < MAX_TERMS) {
+          current_params.languages[current_params.language_count++] =
+              strdup(token + 9);
+        }
+      } else if (strncmp(token, "author:", 7) == 0) {
+        if (current_params.author_count < MAX_TERMS) {
+          current_params.authors[current_params.author_count++] =
+              strdup(token + 7);
+        }
+      } else if (strncmp(token, "repo:", 5) == 0) {
+        if (current_params.repo_count < MAX_TERMS) {
+          current_params.repos[current_params.repo_count++] = strdup(token + 5);
+        }
+      } else if (strncmp(token, "org:", 4) == 0) {
+        if (current_params.org_count < MAX_TERMS) {
+          current_params.orgs[current_params.org_count++] = strdup(token + 4);
+        }
+      } else if (strncmp(token, "path:", 5) == 0) {
+        if (current_params.path_count < MAX_TERMS) {
+          current_params.paths[current_params.path_count++] = strdup(token + 5);
+        }
+      } else if (strncmp(token, "content:", 8) == 0) {
+        if (current_params.content_count < MAX_TERMS) {
+          current_params.contents[current_params.content_count++] =
+              strdup(token + 8);
+        }
+      } else if (strncmp(token, "stars:", 6) == 0) {
+        current_params.stars_op =
+            strdup(token + 6); // Store the stars operation
+        current_params.stars = 1;
+      } else if (strncmp(token, "NOT", 3) == 0) {
+        current_params.not_op = 1;
+        token += 4; // Move past "NOT"
+        if (current_params.keyword_count < MAX_TERMS) {
+          current_params.keywords[current_params.keyword_count++] =
+              strdup(token);
+        }
+      } else {
+        if (current_params.keyword_count < MAX_TERMS) {
+          current_params.keywords[current_params.keyword_count++] =
+              strdup(token);
+        }
       }
     }
     token = strtok(NULL, " ");
   }
-}
 
-char *strndup(const char *src, size_t n) {
-  size_t len = 0;
-  while (len < n && src[len]) len++;
-  char *dup = (char *)malloc(len + 1);
-  if (dup) {
-    strncpy(dup, src, len);
-    dup[len] = '\0';
+  // Add the last group if it contains any parameters
+  if (current_params.language_count > 0 || current_params.author_count > 0 ||
+      current_params.repo_count > 0 || current_params.org_count > 0 ||
+      current_params.path_count > 0 || current_params.content_count > 0 ||
+      current_params.keyword_count > 0 || current_params.stars > 0) {
+
+    query->groups[query->group_count].params = current_params;
+    query->groups[query->group_count].logical_op =
+        NULL; // No logical operator for last group
+    query->group_count++;
   }
-  return dup;
 }
 
-void print_params(const SearchParams *params) {
+void print_params(const SearchQuery *query) {
   printf("--/ Parsed Search Parameters: \\--\n");
-
-  if (params->language_count > 0) {
-    printf("- Languages: ");
-    for (int i = 0; i < params->language_count; i++) {
-      printf("%s", params->languages[i]);
-      if (i < params->language_count - 1) printf(", ");
+  for (int i = 0; i < query->group_count; i++) {
+    if (query->groups[i].logical_op) {
+      printf("Logical Operator: %s\n", query->groups[i].logical_op);
     }
-    printf("\n");
-  }
 
-  if (params->author_count > 0) {
-    printf("- Authors: ");
-    for (int i = 0; i < params->author_count; i++) {
-      printf("%s", params->authors[i]);
-      if (i < params->author_count - 1) printf(", ");
+    const SearchParams *params = &query->groups[i].params;
+    int has_params = 0;
+
+    // Check and print each category only if it has parameters
+    if (params->language_count > 0) {
+      has_params = 1;
+      printf("- Languages: ");
+      for (int j = 0; j < params->language_count; j++) {
+        printf("%s", params->languages[j]);
+        if (j < params->language_count - 1) printf(", ");
+      }
+      printf("\n");
     }
-    printf("\n");
-  }
 
-  if (params->repo_count > 0) {
-    printf("- Repositories: ");
-    for (int i = 0; i < params->repo_count; i++) {
-      printf("%s", params->repos[i]);
-      if (i < params->repo_count - 1) printf(", ");
+    if (params->author_count > 0) {
+      has_params = 1;
+      printf("- Authors: ");
+      for (int j = 0; j < params->author_count; j++) {
+        printf("%s", params->authors[j]);
+        if (j < params->author_count - 1) printf(", ");
+      }
+      printf("\n");
     }
-    printf("\n");
-  }
 
-  if (params->org_count > 0) {
-    printf("- Organizations: ");
-    for (int i = 0; i < params->org_count; i++) {
-      printf("%s", params->orgs[i]);
-      if (i < params->org_count - 1) printf(", ");
+    if (params->repo_count > 0) {
+      has_params = 1;
+      printf("- Repositories: ");
+      for (int j = 0; j < params->repo_count; j++) {
+        printf("%s", params->repos[j]);
+        if (j < params->repo_count - 1) printf(", ");
+      }
+      printf("\n");
     }
-    printf("\n");
-  }
 
-  if (params->path_count > 0) {
-    printf("- Paths: ");
-    for (int i = 0; i < params->path_count; i++) {
-      printf("%s", params->paths[i]);
-      if (i < params->path_count - 1) printf(", ");
+    if (params->org_count > 0) {
+      has_params = 1;
+      printf("- Orgs: ");
+      for (int j = 0; j < params->org_count; j++) {
+        printf("%s", params->orgs[j]);
+        if (j < params->org_count - 1) printf(", ");
+      }
+      printf("\n");
     }
-    printf("\n");
-  }
 
-  if (params->content_count > 0) {
-    printf("- Contents: ");
-    for (int i = 0; i < params->content_count; i++) {
-      printf("%s", params->contents[i]);
-      if (i < params->content_count - 1) printf(", ");
+    if (params->path_count > 0) {
+      has_params = 1;
+      printf("- Paths: ");
+      for (int j = 0; j < params->path_count; j++) {
+        printf("%s", params->paths[j]);
+        if (j < params->path_count - 1) printf(", ");
+      }
+      printf("\n");
     }
-    printf("\n");
-  }
 
-  if (params->stars_op) {
-    printf("* Stars: %s%d\n", params->stars_op, params->stars);
-  }
-
-  if (params->keyword_count > 0) {
-    printf("- Keywords: ");
-    for (int i = 0; i < params->keyword_count; i++) {
-      printf("%s", params->keywords[i]);
-      if (i < params->keyword_count - 1) printf(", ");
+    if (params->content_count > 0) {
+      has_params = 1;
+      printf("- Contents: ");
+      for (int j = 0; j < params->content_count; j++) {
+        printf("%s", params->contents[j]);
+        if (j < params->content_count - 1) printf(", ");
+      }
+      printf("\n");
     }
-    printf("\n");
-  }
 
-  printf("- NOT Found: %s\n", params->not_op ? "Yes" : "No");
-  if (params->logical_op) {
-    printf("- Logical Operator: %s\n", params->logical_op);
+    // Print stars information
+    if (params->stars_op) {
+      has_params = 1;
+      printf("* Stars: %s\n", params->stars_op);
+    }
+
+    if (params->keyword_count > 0) {
+      has_params = 1;
+      printf("- Keywords: ");
+      for (int j = 0; j < params->keyword_count; j++) {
+        printf("%s", params->keywords[j]);
+        if (j < params->keyword_count - 1) printf(", ");
+      }
+      printf("\n");
+    }
+
+    printf("- NOT Found: %s\n", params->not_op ? "Yes" : "No");
+
+    // Only print a group if it has parameters
+    if (!has_params) { printf("- No parameters found for this group.\n"); }
   }
 }
