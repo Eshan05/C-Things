@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define MAX_ROWS     100
 #define MAX_COLS     100
@@ -203,7 +204,7 @@ int main() {
       printf("\n-> Sparse Matrix 1:\n");
       print_sparse(S1, count1);
     } else if (choice == 2) {
-      printf("\033[1;32mSelected 2.\033[0m");
+      printf("\n\033[1;32mSelected 2.\033[0m");
       printf("\nEnter the number of rows and columns for Matrix 2 (R C): ");
       scanf("%d %d", &rows2, &cols2);
       printf("Enter elements for Matrix 1 row by row:\n");
@@ -217,7 +218,7 @@ int main() {
       printf("\n-> Sparse Matrix 2:\n");
       print_sparse(S2, count2);
     } else if (choice == 3) {
-      printf("\033[1;32mSelected 3.\033[0m");
+      printf("\n\033[1;32mSelected 3.\033[0m");
       if (count1 > 0) {
         result_count = transpose(S1, count1, result);
         printf("\n-> Transposed Sparse Matrix 1:\n");
@@ -226,7 +227,7 @@ int main() {
         printf("\n\033[1;31m#\033[0m Sparse matrix 1 is not added yet\n");
       }
     } else if (choice == 4) {
-      printf("\033[1;32mSelected 4.\033[0m");
+      printf("\n\033[1;32mSelected 4.\033[0m");
       if (count1 > 0) {
         result_count = fast_transpose(S1, count1, result, rows1, cols1);
         printf("\n-> Fast Transposed Sparse Matrix 1:\n");
@@ -235,7 +236,7 @@ int main() {
         printf("\n\033[1;31m#\033[0m Sparse matrix 1 is not added yet\n");
       }
     } else if (choice == 5) {
-      printf("\033[1;32mSelected 5.\033[0m");
+      printf("\n\033[1;32mSelected 5.\033[0m");
       if (count1 > 0 && count2 > 0) {
         result_count = addition(S1, count1, S2, count2, result);
         printf("\n-> Sparse Matrix 1 + Sparse Matrix 2:\n");
@@ -245,6 +246,7 @@ int main() {
       }
     } else if (choice == 6) {
       printf("Exiting...\n");
+      sleep(1);
       cls();
       break;
     } else {
