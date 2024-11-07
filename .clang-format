@@ -6,6 +6,7 @@ AlignConsecutiveDeclarations: false
 AlignConsecutiveMacros: true
 AlignEscapedNewlines: Left
 AlignOperands: true
+AlignArrayOfStructures: Left # Pretty matrices
 # AlignTrailingComments: true
 AllowAllArgumentsOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: true
