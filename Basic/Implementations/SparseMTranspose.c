@@ -11,6 +11,14 @@
 // allocation, plus we can use sizeOf because sizeof(M) gives size of pointer M
 // not the dynamically allocated memory it points to.
 
+void cls() {
+#ifdef _WIN32
+  system("cls");
+#else
+  system("clear");
+#endif
+}
+
 typedef struct {
   int row;
   int col;
@@ -51,7 +59,118 @@ void print_sparse(SparseElement sparse[MAX_NON_ZERO], int count) {
   }
 }
 
+int transpose(SparseElement sparse[MAX_NON_ZERO], int count,
+              SparseElement result[MAX_NON_ZERO]) {
+  int k = 0;
+  for (int i = 0; i < count; i++) {
+    result[k].row = sparse[i].col;
+    result[k].col = sparse[i].row;
+    result[k].value = sparse[i].value;
+    k++;
+  }
+  return k;
+}
+
+// Alternative way with dynamic allocation
+SparseElement *transposeAlt(SparseElement sparse[MAX_NON_ZERO], int count) {
+  SparseElement *result = malloc(count * sizeof(SparseElement));
+  if (!transpose) {
+    printf("\033[1;31mMemory allocation failed!\n");
+    return NULL;
+  }
+
+  int k = 0;
+  for (int i = 0; i < count; i++) {
+    result[k].row = sparse[i].col;
+    result[k].col = sparse[i].row;
+    result[k].value = sparse[i].value;
+    k++;
+  }
+  return result;
+  /**
+   * In main:
+   * SparseElement *transposed = NULL;
+   * transposed = transpose(S1, count1);
+   * free(transposed);
+   */
+}
+
+int fast_transpose(SparseElement sparse[MAX_NON_ZERO], int count,
+                   SparseElement result[MAX_NON_ZERO], int rows, int cols) {
+  int *row_terms = (int *)calloc(cols, sizeof(int));
+  int *start = (int *)calloc(cols, sizeof(int));
+  SparseElement *temp = (SparseElement *)malloc(count * sizeof(SparseElement));
+
+  for (int i = 0; i < count; i++) { row_terms[sparse[i].col]++; }
+  start[0] = 0;
+  for (int i = 1; i < cols; i++) { start[i] = start[i - 1] + row_terms[i - 1]; }
+
+  for (int i = 0; i < count; i++) {
+    int pos = start[sparse[i].col];
+    temp[pos].row = sparse[i].col;
+    temp[pos].col = sparse[i].row;
+    temp[pos].value = sparse[i].value;
+    start[sparse[i].col]++;
+  }
+
+  for (int i = 0; i < count; i++) { result[i] = temp[i]; }
+
+  free(row_terms);
+  free(start);
+  free(temp);
+  return count;
+}
+
+int addition(SparseElement s1[MAX_NON_ZERO], int count1,
+             SparseElement s2[MAX_NON_ZERO], int count2,
+             SparseElement result[MAX_NON_ZERO]) {
+  int i = 0, j = 0, k = 0;
+  while (i < count1 && j < count2) {
+    if (s1[i].row == s2[j].row) {
+      if (s1[i].col == s2[j].col) {
+        result[k].row = s1[i].row;
+        result[k].col = s1[i].col;
+        result[k].value = s1[i].value + s2[j].value;
+        k++;
+        i++;
+        j++;
+      } else if (s1[i].col < s2[j].col) {
+        result[k] = s1[i];
+        k++;
+        i++;
+      } else {
+        result[k] = s2[j];
+        k++;
+        j++;
+      }
+    } else if (s1[i].row < s2[j].row) {
+      result[k] = s1[i];
+      k++;
+      i++;
+    } else {
+      result[k] = s2[j];
+      k++;
+      j++;
+    }
+  }
+
+  while (i < count1) {
+    result[k] = s1[i];
+    k++;
+    i++;
+  }
+
+  while (j < count2) {
+    result[k] = s2[j];
+    k++;
+    j++;
+  }
+
+  return k;
+}
+
 int main() {
+  cls();
   int denseM1[MAX_ROWS][MAX_COLS], denseM2[MAX_ROWS][MAX_COLS];
   SparseElement S1[MAX_NON_ZERO], S2[MAX_NON_ZERO], result[MAX_NON_ZERO];
   int rows1, cols1, rows2, cols2;
@@ -99,15 +218,39 @@ int main() {
       print_sparse(S2, count2);
     } else if (choice == 3) {
       printf("\033[1;32mSelected 3.\033[0m");
+      if (count1 > 0) {
+        result_count = transpose(S1, count1, result);
+        printf("\n-> Transposed Sparse Matrix 1:\n");
+        print_sparse(result, result_count);
+      } else {
+        printf("\n\033[1;31m#\033[0m Sparse matrix 1 is not added yet\n");
+      }
     } else if (choice == 4) {
       printf("\033[1;32mSelected 4.\033[0m");
+      if (count1 > 0) {
+        result_count = fast_transpose(S1, count1, result, rows1, cols1);
+        printf("\n-> Fast Transposed Sparse Matrix 1:\n");
+        print_sparse(result, result_count);
+      } else {
+        printf("\n\033[1;31m#\033[0m Sparse matrix 1 is not added yet\n");
+      }
     } else if (choice == 5) {
       printf("\033[1;32mSelected 5.\033[0m");
+      if (count1 > 0 && count2 > 0) {
+        result_count = addition(S1, count1, S2, count2, result);
+        printf("\n-> Sparse Matrix 1 + Sparse Matrix 2:\n");
+        print_sparse(result, result_count);
+      } else {
+        printf("\n\033[1;31m#\033[0m Sparse matrix 1 or 2 is not added yet\n");
+      }
     } else if (choice == 6) {
-      printf("Exiiting...\n");
+      printf("Exiting...\n");
+      cls();
       break;
     } else {
       printf("Invalid choice");
     }
   }
+
+  return 0;
 }
