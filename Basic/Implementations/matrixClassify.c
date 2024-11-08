@@ -13,12 +13,16 @@ void cls() {
 #endif
 }
 
-void display();
+void display(int[MAX_ROWS][MAX_COLS], int rows, int cols);
 int isSquare(int rows, int cols);
 void isScalar(int M[MAX_ROWS][MAX_COLS], int rows, int cols);
 void isDiagonal(int M[MAX_ROWS][MAX_COLS], int rows, int cols);
 void isIdentity(int M[MAX_ROWS][MAX_COLS], int rows, int cols);
 void isSingular(int M[MAX_ROWS][MAX_COLS], int rows, int cols);
+void isLower(int M[MAX_ROWS][MAX_COLS], int rows, int cols);
+void isUpper(int M[MAX_ROWS][MAX_COLS], int rows, int cols);
+void isSymmetric(int M[MAX_ROWS][MAX_COLS], int rows, int cols);
+void isAntiSymmetric(int M[MAX_ROWS][MAX_COLS], int rows, int cols);
 
 void getCofactor(int M[MAX_ROWS][MAX_COLS], int temp[MAX_ROWS][MAX_COLS],
                  int rows, int cols, int r, int c);
