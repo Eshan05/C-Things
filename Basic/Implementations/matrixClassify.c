@@ -122,7 +122,7 @@ void isUpper(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
       if (i > j && M[i][j] != 0) {
-        printf("Not lower triangular");
+        printf("Not upper triangular");
         return;
       }
     }
@@ -141,18 +141,32 @@ void isSingular(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
 
 void isSymmetric(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
   if (!isSquare(rows, cols)) return;
-  for (int i = 0; i < rows; i++)
-    for (int j = 0; j < cols; j++) { M[i][j] == M[j][i]; }
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      if (M[i][j] != M[j][i]) {
+        printf("Not a symmetric matrix");
+        return;
+      }
+    }
+  }
+  printf("Is a symmetric matrix");
 }
 
 void isAntiSymmetric(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
   if (!isSquare(rows, cols)) return;
-  for (int i = 0; i < rows; i++)
-    for (int j = 0; j < cols; j++) { M[i][j] == -M[j][i]; }
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      if (M[i][j] != -M[j][i]) {
+        printf("Not an anti-symmetric matrix");
+        return;
+      }
+    }
+  }
+  printf("Is an anti-symmetric matrix");
 }
 
 // r, c: Row and column indices of element for which cofactor is computed
-void getCOfactor(int M[MAX_ROWS][MAX_COLS], int temp[MAX_ROWS][MAX_COLS],
+void getCofactor(int M[MAX_ROWS][MAX_COLS], int temp[MAX_ROWS][MAX_COLS],
                  int rows, int cols, int r, int c) {
   int i = 0, j = 0;
   for (int row = 0; row < rows; row++)
