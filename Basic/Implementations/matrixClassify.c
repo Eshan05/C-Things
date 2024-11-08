@@ -14,6 +14,7 @@ void cls() {
 }
 
 void display();
+int isSquare(int rows, int cols);
 void isScalar(int M[MAX_ROWS][MAX_COLS], int rows, int cols);
 void isDiagonal(int M[MAX_ROWS][MAX_COLS], int rows, int cols);
 void isIdentity(int M[MAX_ROWS][MAX_COLS], int rows, int cols);
@@ -46,10 +47,7 @@ void display(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
 }
 
 void isScalar(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
-  if (rows != cols) {
-    printf("Not a square matrix");
-    return;
-  }
+  if (!isSquare(rows, cols)) return;
 
   int a = M[0][0];
   for (int i = 0; i < rows; i++) {
@@ -73,10 +71,7 @@ void isScalar(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
 }
 
 void isDiagonal(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
-  if (rows != cols) {
-    printf("Not a diagonal matrix");
-    return;
-  }
+  if (!isSquare(rows, cols)) return;
 
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
@@ -90,10 +85,7 @@ void isDiagonal(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
 }
 
 void isIdentity(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
-  if (rows != cols) {
-    printf("Not a square matrix");
-    return;
-  }
+  if (!isSquare(rows, cols)) return;
 
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
@@ -107,10 +99,7 @@ void isIdentity(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
 }
 
 void isLower(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
-  if (rows != cols) {
-    printf("Not lower triangular");
-    return;
-  }
+  if (!isSquare(rows, cols)) return;
 
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
@@ -124,10 +113,7 @@ void isLower(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
 }
 
 void isUpper(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
-  if (rows != cols) {
-    printf("Not lower triangular");
-    return;
-  }
+  if (!isSquare(rows, cols)) return;
 
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
@@ -141,10 +127,7 @@ void isUpper(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
 }
 
 void isSingular(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
-  if (rows != cols) {
-    printf("Not a square matrix");
-    return;
-  }
+  if (!isSquare(rows, cols)) return;
 
   int det = determinant(M, rows);
   if (det == 0) printf("Matrix is singular");
@@ -153,21 +136,13 @@ void isSingular(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
 }
 
 void isSymmetric(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
-  if (rows != cols) {
-    printf("Not a square matrix");
-    return;
-  }
-
+  if (!isSquare(rows, cols)) return;
   for (int i = 0; i < rows; i++)
     for (int j = 0; j < cols; j++) { M[i][j] == M[j][i]; }
 }
 
 void isAntiSymmetric(int M[MAX_ROWS][MAX_COLS], int rows, int cols) {
-  if (rows != cols) {
-    printf("Not a square matrix");
-    return;
-  }
-
+  if (!isSquare(rows, cols)) return;
   for (int i = 0; i < rows; i++)
     for (int j = 0; j < cols; j++) { M[i][j] == -M[j][i]; }
 }
@@ -201,4 +176,12 @@ int determinant(int M[MAX_ROWS][MAX_COLS], int n) {
   }
 
   return det;
+}
+
+int isSquare(int rows, int cols) {
+  if (rows != cols) {
+    printf("Matrix is not square\n");
+    return 0;
+  }
+  return 1;
 }
