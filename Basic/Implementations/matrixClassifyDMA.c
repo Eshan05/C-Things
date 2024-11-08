@@ -5,6 +5,15 @@
 #define MAX_COLS 15
 #define NL       printf("\n")
 
+#define ALLOC_MATRIX(rows, cols)                      \
+  ({                                                  \
+    int **M = (int **)malloc((rows) * sizeof(int *)); \
+    for (int i = 0; i < (rows); i++) {                \
+      M[i] = (int *)malloc((cols) * sizeof(int));     \
+    }                                                 \
+    M;                                                \
+  })
+
 void transpose(int **M, int **M_T, int rows, int cols);
 void multiplyMatrices(int **A, int **B, int **result, int A_rows, int A_cols,
                       int B_cols);
@@ -28,8 +37,7 @@ void isCentrosymmetric(int **M, int rows, int cols);
 void isElementary(int **M, int rows, int cols);
 
 int main() {
-  int **m = (int **)malloc(3 * sizeof(int *));
-  for (int i = 0; i < 3; i++) m[i] = (int *)malloc(3 * sizeof(int));
+  int **m = ALLOC_MATRIX(3, 3);
   m[0][0] = 1;
   m[0][1] = 0;
   m[0][2] = 0;
@@ -40,15 +48,13 @@ int main() {
   m[2][1] = 0;
   m[2][2] = 1;
 
-  int **a = (int **)malloc(2 * sizeof(int *));
-  for (int i = 0; i < 2; i++) a[i] = (int *)malloc(2 * sizeof(int));
+  int **a = ALLOC_MATRIX(2, 2);
   a[0][0] = 0;
   a[0][1] = 1;
   a[1][0] = 1;
   a[1][1] = 0;
 
-  int **b = (int **)malloc(3 * sizeof(int *));
-  for (int i = 0; i < 3; i++) b[i] = (int *)malloc(3 * sizeof(int));
+  int **b = ALLOC_MATRIX(3, 3);
   b[0][0] = 1;
   b[0][1] = 0;
   b[0][2] = 0;
@@ -66,7 +72,6 @@ int main() {
   printf("b: ");
   isElementary(b, 3, 3);
 
-  // Free dynamically allocated memory
   for (int i = 0; i < 3; i++) free(m[i]);
   free(m);
 
@@ -198,11 +203,9 @@ void isAntiSymmetric(int **M, int rows, int cols) {
 
 void isOrthogonal(int **M, int rows, int cols) {
   if (!isSquare(rows, cols)) return;
-  int **M_T = (int **)malloc(cols * sizeof(int *));
-  for (int i = 0; i < cols; i++) M_T[i] = (int *)malloc(rows * sizeof(int));
+  int **M_T = ALLOC_MATRIX(cols, rows);
 
-  int **prod = (int **)malloc(rows * sizeof(int *));
-  for (int i = 0; i < rows; i++) prod[i] = (int *)malloc(cols * sizeof(int));
+  int **prod = ALLOC_MATRIX(rows, cols);
 
   transpose(M, M_T, rows, cols);
   multiplyMatrices(M_T, M, prod, cols, rows, cols);
@@ -219,8 +222,7 @@ void isOrthogonal(int **M, int rows, int cols) {
 
 void isIdempotent(int **M, int rows, int cols) {
   if (!isSquare(rows, cols)) return;
-  int **result = (int **)malloc(rows * sizeof(int *));
-  for (int i = 0; i < rows; i++) result[i] = (int *)malloc(cols * sizeof(int));
+  int **result = ALLOC_MATRIX(rows, cols);
 
   multiplyMatrices(M, M, result, rows, cols, cols);
   for (int i = 0; i < rows; i++) {
@@ -306,8 +308,7 @@ int determinant(int **M, int n) {
   if (n == 2) return M[0][0] * M[1][1] - M[0][1] * M[1][0];
 
   int det = 0;
-  int **temp = (int **)malloc(n * sizeof(int *));
-  for (int i = 0; i < n; i++) temp[i] = (int *)malloc(n * sizeof(int));
+  int **temp = ALLOC_MATRIX(n, n);
 
   for (int p = 0; p < n; p++) {
     getCofactor(M, temp, n, n, 0, p);
