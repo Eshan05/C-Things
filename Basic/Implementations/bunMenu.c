@@ -69,9 +69,9 @@ int main() {
   printf("\033[3G\033[1;36mcreate\033[13G\033[38;5;242m%s\033[34G\033["
          "0mCreate a new project from a template \033[38;5;242m(bun c)\n",
          templates[randomTemplateIndex]);
-  printf("\033[30;3H\033[1;36mupgrade\033[34G\033[0mUpgrade to latest version "
+  printf("\033[3G\033[1;36mupgrade\033[34G\033[0mUpgrade to latest version "
          "of Bun.\n");
-  printf("\033[32;3H\033[1;30m<command> \033[1;36m--help\033[34G\033[0mPrint "
+  printf("\033[3G\033[1;30m<command> \033[1;36m--help\033[34G\033[0mPrint "
          "help text for command.\n");
   printf("\033[0m");
   //
